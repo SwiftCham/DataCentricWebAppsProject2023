@@ -1,0 +1,23 @@
+<ul class="nav navbar-nav navbar-right">
+    <li><a <%if(active=="Home"){%>class="active"<%}%> href="/index">Home</a></li>
+</ul>
+
+<table>
+    <!-- add a store button -->
+    <a href="/stores/add">Add a Store</a>
+    <tb>
+        <th>SID</th>
+        <th>Location</th>
+        <th>Manager ID</th>
+    </tb>
+    <% store.forEach((store) => { %>
+        <tr>
+            <td><%= store.SID %></td>
+            <td><%= store.Location %></td>
+            <td><%= store.ManagerID %></td>
+            <!-- edit store button -->
+            <td><a href="/stores/edit/<%= store.SID %>">Edit</a></td>
+            
+        </tr>
+    <% }) %>
+</table>
