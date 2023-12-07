@@ -1,0 +1,57 @@
+var express = require('express');
+var app = express();
+var pmysql = require('promise-mysql'); //promise-mysql is a wrapper for mysql that allows us to use promises instead of callbacks
+var pool;
+
+pmysql.createPool({
+    connectionLimit : 3,
+    host : 'localhost',
+    user : 'root',
+    password : '',
+    database : 'proj2023', //database name
+    port : 3306
+}).then(p => {
+    pool = p;
+}).catch(err => {
+    console.log("Pool Error: " +err);
+});
+
+function getStore() {
+    return new Promise((resolve, reject) => {
+     pool.query('SELECT * FROM store')
+        .then((data) => {
+            resolve(data);
+        })
+        .catch(err => {
+            reject(err);
+        })
+    })
+}
+
+/*
+function updateStore() {
+    return new Promise((resolve, sreject) => {
+        pool.query('UPDATE FROM store WHERE sid = ?', [sid])//TODO: amend name of table
+        .then((data => {
+            resolve(data);
+        }))
+        .catch(err => {
+            sreject(err);
+        });
+    });
+}*/
+
+function addStore() { 
+    return new Promise((resolve, sreject) => {
+        pool.query('INSERT INTO store (sid, location, mgrid) VALUES (?, ?, ?)', [sid, location, mgrid])
+        .then((data) => {
+            resolve(data);
+        })
+        .catch(err => {
+            sreject(err);
+        });
+    });
+}
+
+
+module.exports = { getStore, addStore, };

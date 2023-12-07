@@ -1,0 +1,19 @@
+<table>
+    <tb>
+        <th>Product ID</th>
+        <th>Description</th>
+        <th>Store ID</th>
+        <th>Location</th>
+        <th>Price</th>
+    </tb>
+    <% product.forEach((product) => { %>
+        <tr>
+            <td><%= product.PID %></td>
+            <td><%= product.Description %></td>
+            <td><%= product.SID %></td>
+            <td><%= product.Location %></td>
+            <td><%= product.Price %></td>
+            <!-- delete product button -->
+            <td><a href="/products/delete/<%= product.PID %>">Delete</a></td>
+        </tr>
+</table>
