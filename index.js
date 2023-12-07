@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const port = 4000;
 let ejs = require('ejs');
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
 
 const { colorize } = require('./colors.js');
 
@@ -28,7 +30,7 @@ app.get('/stores', (req, res) => {
       res.send(err);
     })
   })
-/*
+
 app.get('/stores/edit/:sid', (req, res) => {
   sqlDAO.updateStore(sid, location, mgrid)
     .then(data => {
@@ -37,7 +39,7 @@ app.get('/stores/edit/:sid', (req, res) => {
       res.send(err);
     })
   });
-
+/*
 app.get('products', (req, res) => {
   sqlDAO.getProducts()
     .then(data => {

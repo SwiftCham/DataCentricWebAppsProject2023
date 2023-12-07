@@ -7,7 +7,7 @@ pmysql.createPool({
     connectionLimit : 3,
     host : 'localhost',
     user : 'root',
-    password : '',
+    password : 'root',
     database : 'proj2023', //database name
     port : 3306
 }).then(p => {
@@ -28,7 +28,7 @@ function getStore() {
     })
 }
 
-/*
+
 function updateStore() {
     return new Promise((resolve, sreject) => {
         pool.query('UPDATE FROM store WHERE sid = ?', [sid])//TODO: amend name of table
@@ -39,7 +39,7 @@ function updateStore() {
             sreject(err);
         });
     });
-}*/
+}
 
 function addStore() { 
     return new Promise((resolve, sreject) => {
