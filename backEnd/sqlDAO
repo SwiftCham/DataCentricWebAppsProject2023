@@ -1,15 +1,25 @@
+
 var express = require('express');
 var app = express();
+require('dotenv').config();
 var pmysql = require('promise-mysql'); //promise-mysql is a wrapper for mysql that allows us to use promises instead of callbacks
+
 var pool;
 
+const username = process.env.SQLDB_USER;
+const password = process.env.SQLDB_PASSWORD;
+const database = process.env.SQLDB_DATABASE;
+const host = process.env.SQLDB_HOST;
+const port = process.env.SQLDB_PORT;
+const connectionLimit = process.env.SQLDB_CONNECTION_LIMIT;   
+
 pmysql.createPool({
-    connectionLimit : 3,
-    host : 'localhost',
-    user : 'root',
-    password : 'root',
-    database : 'proj2023', //database name
-    port : 3306
+    connectionLimit : connectionLimit,
+    host : host,
+    user : username,
+    password : password,
+    database : database , //database name
+    port : port
 }).then(p => {
     pool = p;
 }).catch(err => {
