@@ -1,15 +1,19 @@
 <form action="/stores/add" method="POST">
+  <%- include('partials/navbar') %>
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.min.js"></script>
     <div>
       <label for="sid">Store ID:</label>
-      <input type="text" name="sid" required>
+      <input type="text" name="sid" id="sid" value="<%= store.sid %>" required>
     </div>
     <div>
       <label for="location">Store Location:</label>
-      <input type="text" name="location" required>
+      <input type="text" name="location" id="location" value="<%= store.location %>" required>
     </div>
     <div>
       <label for="mgrid">Manager ID:</label>
-      <input type="text" name="mgrid" required>
+      <input type="text" name="mgrid" iss="mgrid" required>
     </div>
       <button type="submit" value="Add">Add Store</button>
   </form>
