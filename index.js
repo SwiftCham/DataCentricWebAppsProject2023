@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 const app = express();
-const port = 4000;
+const port = 4010;
 let ejs = require('ejs');
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -68,11 +68,12 @@ app.post('/stores/:id', (req, res) => {
 
 //when add button is pressed on stores page, display add page
 app.get('/stores/add', function(req, res) {
-  res.render('addstore');
+  res.render('addStore');
 });
 
 //when add button is pressed on add page, add store to database
-app.post('/stores/add', function(req, res)  {
+app.post("/stores/add", function(req, res)  {
+  console.log(req.body);
   sqlDAO.addStore(req.body.sid, req.body.location, req.body.mgrid)
     .then(() => {
       res.redirect('/stores'); //redirect to stores page
@@ -95,6 +96,33 @@ app.post('/stores/delete/:id', (req, res) => {
     });
 });
 
+//display all products from database
+app.get('/products', (req, res) => {
+  sqlDAO.getAllProducts()
+    .then((data) => {
+      res.render('products', { products: data });
+    }).catch((err) => {
+      //output error message in red text using escape code
+      console.log(colorize('red', 'Error in Index.js: \n ' + err));
+      res.send(err);
+    })
+  });
+
+//delete product from database
+app.post('/products/delete/:pid', (req, res) => {
+  const productId = req.params.pid;
+  sqlDAO.deleteProduct(productId)
+      .then(() => {
+          res.redirect('/products');
+      })
+      .catch((err) => {
+          console.error('Error deleting product:', err);
+          res.status(500).send('Error deleting product');
+      });
+});
+
+
 app.listen(port, () => {
   console.log(colorize('orange', `App listening at http://localhost:${port}`));
 });
+

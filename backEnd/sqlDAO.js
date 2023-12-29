@@ -60,6 +60,7 @@ function addStore(sid, location, mgrid) {
             resolve(data);
         })
         .catch(err => {
+            console.error("Error adding store in SQL DAO:", err);
             reject(err);
         })
     })
@@ -92,5 +93,43 @@ function getStoreById(sid) {
     })
 }
 
-module.exports = { getStore, addStore, editStore, getStoreById, addStore, deleteStore }; // Add getStoreById to the exports
+//get products from database
+function getAllProducts() {
+    return new Promise((resolve, reject) => {
+        const sqlQuery = `
+            SELECT p.pid, p.productdesc, ps.sid, s.location, ps.price
+            FROM product p
+            INNER JOIN product_store ps ON p.pid = ps.pid
+            INNER JOIN store s ON ps.sid = s.sid;
+        `;
+        pool.query(sqlQuery)
+        .then((data) => {
+            resolve(data);
+        })
+        .catch(err => {
+            reject(err);
+        });
+    });
+}
+
+//Function to delete a product
+function deleteProduct(pid) {
+    return new Promise((resolve, reject) => {
+        pool.query('DELETE FROM product_store WHERE pid = ?', [pid])
+            .then(() => {
+                return pool.query('DELETE FROM product WHERE pid = ?', [pid]);
+            })
+            .then((result) => {
+                resolve(result);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
+
+
+
+
+module.exports = { getStore, addStore, editStore, getStoreById, deleteStore, getAllProducts, deleteProduct}; // Add getStoreById to the exports
 

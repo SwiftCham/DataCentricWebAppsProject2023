@@ -1,19 +1,54 @@
-<table>
-    <tb>
-        <th>Product ID</th>
-        <th>Description</th>
-        <th>Store ID</th>
-        <th>Location</th>
-        <th>Price</th>
-    </tb>
-    <% product.forEach((product) => { %>
-        <tr>
-            <td><%= product.PID %></td>
-            <td><%= product.Description %></td>
-            <td><%= product.SID %></td>
-            <td><%= product.Location %></td>
-            <td><%= product.Price %></td>
-            <!-- delete product button -->
-            <td><a href="/products/delete/<%= product.PID %>">Delete</a></td>
-        </tr>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Page</title>
+</head>
+
+<body>
+    <h1>Products</h1>
+    <p>Click on the links below to navigate to the different pages</p>
+    <a href="/">Home</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Description</th>
+                <th>Store ID</th>
+                <th>Location</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% products.forEach(product=> { %>
+                <tr>
+                    <td>
+                        <%= product.pid %>
+                    </td>
+                    <td>
+                        <%= product.productdesc %>
+                    </td>
+                    <td>
+                        <%= product.sid %>
+                    </td>
+                    <td>
+                        <%= product.location %>
+                    </td>
+                    <td>
+                        <%= product.price.toFixed(2) %>
+                    </td>
+                    <td>
+                        <form action="/products/delete/<%= product.pid %>" method="POST">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+</body>
+
+</html>
