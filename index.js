@@ -15,9 +15,17 @@ const { colorize } = require('./colors.js');
 
 //database imports
 var sqlDAO = require('./backEnd/sqlDAO.js');
-//var mongoDAO = require('./backEnd/mongoDAO.js');
+var mongoDAO = require('./backEnd/mongoDAO.js');
 
 
+
+mongoDAO.connect().then(() => {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}).catch(err => {
+  console.error('Failed to connect to MongoDB', err);
+});
 
 
 app.get('/', (req, res) => {
@@ -109,20 +117,44 @@ app.get('/products', (req, res) => {
   });
 
 //delete product from database
-app.post('/products/delete/:pid', (req, res) => {
+app.get('/products/delete/:pid', (req, res) => {
   const productId = req.params.pid;
-  sqlDAO.deleteProduct(productId)
-      .then(() => {
-          res.redirect('/products');
+  sqlDAO.checkProductInStores(productId)
+      .then((productStores) => {
+          if (productStores.length > 0) {
+              //Product is sold in stores, so it cannot be deleted
+              return res.status(400).send(`${productId} is currently in stores and cannot be deleted`);
+          } else {
+              return sqlDAO.deleteProduct(productId)
+                  .then(() => {
+                      //Redirects only after successful deletion.
+                      res.redirect('/products');
+                  });
+          }
       })
       .catch((err) => {
-          console.error('Error deleting product:', err);
-          res.status(500).send('Error deleting product');
+          // Handle errors appropriately
+          console.error('Error:', err);
+          res.status(500).send('Error processing your request');
       });
 });
 
+/*
+*MONGO DB
+*/
+app.get('/managers', async (req, res) => {
+  try {
+    const db = mongoDAO.getDb();
+    const managers = await db.collection('managers').find({}).toArray();
+    managers.sort((a, b) => (a._id > b._id) ? 1 : -1);
 
-app.listen(port, () => {
-  console.log(colorize('orange', `App listening at http://localhost:${port}`));
+    res.render('managers', { managers });
+  } catch (err) {
+    console.error('Error fetching managers:', err);
+    res.status(500).send('Internal Server Error');
+  }
 });
+
+
+
 

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Managers</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Managers</h1>
+
+    <!-- Button to go back to the home menu -->
+    <a href="/" style="text-decoration: none;">
+        <button style="padding: 10px; margin-bottom: 10px;">Go Back to Home</button>
+    </a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>ID</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% managers.forEach(function(manager) { %>
+                <tr>
+                    <td><%= manager.name %></td>
+                    <td><%= manager._id %></td>
+                    <td><%= manager.salary %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</body>
+</html>

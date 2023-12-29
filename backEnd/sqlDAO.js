@@ -11,30 +11,30 @@ const password = process.env.SQLDB_PASSWORD;
 const database = process.env.SQLDB_DATABASE;
 const host = process.env.SQLDB_HOST;
 const port = process.env.SQLDB_PORT;
-const connectionLimit = process.env.SQLDB_CONNECTION_LIMIT;   
+const connectionLimit = process.env.SQLDB_CONNECTION_LIMIT;
 
 pmysql.createPool({
-    connectionLimit : connectionLimit,
-    host : host,
-    user : username,
-    password : password,
-    database : database , //database name
-    port : port
+    connectionLimit: connectionLimit,
+    host: host,
+    user: username,
+    password: password,
+    database: database, //database name
+    port: port
 }).then(p => {
     pool = p;
 }).catch(err => {
-    console.log("Pool Error: " +err);
+    console.log("Pool Error: " + err);
 });
 
 function getStore() {
     return new Promise((resolve, reject) => {
-     pool.query('SELECT * FROM store')
-        .then((data) => {
-            resolve(data);
-        })
-        .catch(err => {
-            reject(err);
-        })
+        pool.query('SELECT * FROM store')
+            .then((data) => {
+                resolve(data);
+            })
+            .catch(err => {
+                reject(err);
+            })
     })
 }
 
@@ -42,12 +42,12 @@ function getStore() {
 function editStore(sid, location, mgrid) {
     return new Promise((resolve, reject) => {
         pool.query('UPDATE store SET location = ?, mgrid = ? WHERE sid = ?', [location, mgrid, sid])
-        .then((data) => {
-            resolve(data);
-        })
-        .catch(err => {
-            reject(err);
-        })
+            .then((data) => {
+                resolve(data);
+            })
+            .catch(err => {
+                reject(err);
+            })
     })
 }
 
@@ -56,25 +56,25 @@ function editStore(sid, location, mgrid) {
 function addStore(sid, location, mgrid) {
     return new Promise((resolve, reject) => {
         pool.query("INSERT INTO store(sid, location, mgrid) VALUES(?, ?, ?)", [sid, location, mgrid])
-        .then((data) => {
-            resolve(data);
-        })
-        .catch(err => {
-            console.error("Error adding store in SQL DAO:", err);
-            reject(err);
-        })
+            .then((data) => {
+                resolve(data);
+            })
+            .catch(err => {
+                console.error("Error adding store in SQL DAO:", err);
+                reject(err);
+            })
     })
 }
 
 function deleteStore(sid) {
     return new Promise((resolve, reject) => {
         pool.query('DELETE FROM store WHERE sid = ?', [sid])
-        .then((data) => {
-            resolve(data);
-        })
-        .catch(err => {
-            reject(err);
-        })
+            .then((data) => {
+                resolve(data);
+            })
+            .catch(err => {
+                reject(err);
+            })
     })
 }
 
@@ -83,13 +83,13 @@ function deleteStore(sid) {
 function getStoreById(sid) {
     return new Promise((resolve, reject) => {
         pool.query('SELECT * FROM store WHERE sid = ?', [sid])
-        .then((data) => {
-            resolve(data[0]); //return the first row of data
-        })
-        .catch(err => {
-            console.log(colorize('red', 'Error in sqlDAO.js: \n ' + err));
-            reject(err);
-        })
+            .then((data) => {
+                resolve(data[0]); //return the first row of data
+            })
+            .catch(err => {
+                console.log(colorize('red', 'Error in sqlDAO.js: \n ' + err));
+                reject(err);
+            })
     })
 }
 
@@ -97,18 +97,19 @@ function getStoreById(sid) {
 function getAllProducts() {
     return new Promise((resolve, reject) => {
         const sqlQuery = `
-            SELECT p.pid, p.productdesc, ps.sid, s.location, ps.price
-            FROM product p
-            INNER JOIN product_store ps ON p.pid = ps.pid
-            INNER JOIN store s ON ps.sid = s.sid;
+        SELECT p.pid, p.productdesc, ps.sid, s.location, ps.price
+        FROM product p
+        LEFT JOIN product_store ps ON p.pid = ps.pid
+        LEFT JOIN store s ON ps.sid = s.sid;
+        
         `;
         pool.query(sqlQuery)
-        .then((data) => {
-            resolve(data);
-        })
-        .catch(err => {
-            reject(err);
-        });
+            .then((data) => {
+                resolve(data);
+            })
+            .catch(err => {
+                reject(err);
+            });
     });
 }
 
@@ -128,8 +129,24 @@ function deleteProduct(pid) {
     });
 }
 
+//checks if peoduct is in a store to prevent deletion
+function checkProductInStores(pid) {
+    return new Promise((resolve, reject) => {
+        pool.query('SELECT * FROM product_store WHERE pid = ?', [pid])
+            .then((result) => {
+                resolve(result);
+            })
+            .catch((err) => {
+                reject(err);
+            });
+    });
+}
 
 
 
-module.exports = { getStore, addStore, editStore, getStoreById, deleteStore, getAllProducts, deleteProduct}; // Add getStoreById to the exports
+
+module.exports = {
+    getStore, addStore, editStore, getStoreById, deleteStore, getAllProducts,
+    deleteProduct, checkProductInStores
+};
 
