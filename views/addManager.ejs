@@ -1,0 +1,37 @@
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('addManagerForm');
+      const mgridInput = document.getElementById('mgrid');
+      
+      form.addEventListener('submit', function(e) {
+        if (!mgridInput.checkValidity()) {
+          e.preventDefault(); // Prevent form submission
+          alert(mgridInput.validationMessage);
+        }
+      });
+    });
+  </script>
+<form id="addManagerForm" action="/managers/add" method="POST">
+    <%- include('partials/navbar') %>
+    <!-- Include Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.min.js">
+    </script>
+    <% if (typeof error !== 'undefined') { %>
+        <p><%= error %></p>
+      <% } %>
+    <div>
+        <label for="_id">Manager ID:</label>
+        <input input type="text" id="mgrid" name="mgrid" pattern=".{1,4}" 
+        title="Manager ID must be 1 to 4 characters long" required>
+    </div>
+    <div>
+        <label for="name">Manager Name:</label>
+        <input type="text" name="name" minlength="6" title="Name must be more than 5 characters" required>
+    </div>
+    <div>
+        <label for="salary">Manager Salary:</label>
+        <input type="text" name="salary" min="30000" max="70000" title="Salary must be between 30,000 and 70,000" required>
+    </div>
+    <button type="submit" value="Add">Add Manager</button>
+</form>
