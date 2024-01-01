@@ -6,7 +6,7 @@ let ejs = require('ejs');
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Import body-parser middleware
+//Import body-parser middleware
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -19,7 +19,7 @@ var mongoDAO = require('./backEnd/mongoDAO.js');
 const e = require('express');
 
 
-
+//checks if mongodata is connected
 mongoDAO.connect().then(() => {
   app.listen(port, () => {
     console.log(`Server running on port ${port}`);
@@ -109,36 +109,35 @@ app.get('/stores/add', function (req, res) {
 });
 
 //when add button is pressed on add page, add store to database
-app.post('/stores/add', async (req, res) => {
-  
-  // First, check if the manager ID exists in MongoDB
-  const db = mongoDAO.getDb(); // Obtain the db instance
-  const manager = await db.collection('managers').findOne({ _id: mgrid });
+app.post('/stores/add/:sid', async (req, res) => {
+  const { sid, location, mgrid } = req.body;
 
-  if (!manager) {
-    // If the manager ID doesn't exist in MongoDB, render the form with an error message
-    res.redirect('/stores/add?error=' + encodeURIComponent('Manager ID does not exist in MongoDB'));
-    return;
-  } else {
-    //check if fields are returning NULL values
-    if (req.body.sid == NULL || req.body.location == NULL || req.body.mgrid == NULL) {
-      res.redirect('/stores/add?error=' + encodeURIComponent('DATA CANNOT BE NULL'));
-      return;
+  try {
+    const db = mongoDAO.getDb();
+    const manager = await db.collection('managers').findOne({ _id: mgrid });
+
+    if (!manager) {
+      //If the manager ID doesn't exist in MongoDB
+      throw new Error('Manager ID does not exist in MongoDB');
     }
-    res.send(req.body)
-      .then(data => {
-        sqlDAO.addStore(req.body.sid, req.body.location, req.body.mgrid);
-        res.message('Store added successfully');
-        res.redirect('/stores'); //redirect to stores page
-      })
-      .catch(err => {
-        if (err.message === 'Manager ID is already assigned to another store') {
-          res.redirect('/stores/add?error=' + encodeURIComponent(err.message));
-        }
-      })
+    
+    //Check for null values in the request body
+    if (!sid || !location || !mgrid) {
+      throw new Error('Data cannot be null');
+    }
+
+    await sqlDAO.addStore(sid, location, mgrid);
+    res.redirect('/stores');
+  } catch (err) {
+    //render the addStore page with the error message
+    res.render('addStore', {
+      error: err.message,
+      sid: sid,
+      location: location,
+      mgrid: mgrid
+    });
   }
-}
-);
+});
 
 //when delete button is pressed on stores page, delete store from database
 app.post('/stores/delete/:id', (req, res) => {
@@ -181,7 +180,7 @@ app.get('/products/delete/:pid', (req, res) => {
       }
     })
     .catch((err) => {
-      // Handle errors appropriately
+      //Handle errors appropriately
       console.error('Error:', err);
       res.status(500).send('Error processing your request');
     });

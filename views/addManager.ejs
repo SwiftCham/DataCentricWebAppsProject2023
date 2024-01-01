@@ -1,16 +1,23 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('addManagerForm');
-      const mgridInput = document.getElementById('mgrid');
+      const salaryInput = document.getElementById('salary');
+      const nameInput = document.getElementById('name');
       
       form.addEventListener('submit', function(e) {
-        if (!mgridInput.checkValidity()) {
+        if (!mgridInput.checkValidity() || !salaryInput.checkValidity() || !nameInput.checkValidity()) {
           e.preventDefault(); // Prevent form submission
-          alert(mgridInput.validationMessage);
+          alert("Please fill in all the required fields correctly.");
+        } else if (salaryInput.value < 30000 || salaryInput.value > 70000) {
+          e.preventDefault(); // Prevent form submission
+          alert("Salary must be between 30,000 and 70,000.");
+        } else if (nameInput.value.length < 6) {
+          e.preventDefault(); // Prevent form submission
+          alert("Manager name must be at least 6 characters long.");
         }
       });
     });
-  </script>
+</script>
 <form id="addManagerForm" action="/managers/add" method="POST">
     <%- include('partials/navbar') %>
     <!-- Include Bootstrap JS and jQuery -->
@@ -19,7 +26,7 @@
     </script>
     <% if (typeof error !== 'undefined') { %>
         <p><%= error %></p>
-      <% } %>
+    <% } %>
     <div>
         <label for="_id">Manager ID:</label>
         <input input type="text" id="mgrid" name="mgrid" pattern=".{1,4}" 
@@ -27,11 +34,11 @@
     </div>
     <div>
         <label for="name">Manager Name:</label>
-        <input type="text" name="name" minlength="6" title="Name must be more than 5 characters" required>
+        <input type="text" id="name" name="name" minlength="6" title="Name must be at least 6 characters long" required>
     </div>
     <div>
         <label for="salary">Manager Salary:</label>
-        <input type="text" name="salary" min="30000" max="70000" title="Salary must be between 30,000 and 70,000" required>
+        <input type="number" id="salary" name="salary" min="30000" max="70000" title="Salary must be between 30,000 and 70,000" required>
     </div>
     <button type="submit" value="Add">Add Manager</button>
 </form>

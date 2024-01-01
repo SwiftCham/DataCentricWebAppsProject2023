@@ -1,30 +1,22 @@
 <script>
-  $(document).ready(function() {
-    $('#addStoreForm').submit(function(event) {
-      event.preventDefault();
-      var sid = $('#sid').val();
-      var location = $('#location').val();
-      var mgrid = $('#mgrid').val();
-      $.ajax({
-        url: '/stores/add',
-        method: 'POST',
-        data: {
-          sid: sid,
-          location: location,
-          mgrid: mgrid
-        },
-        success: function(response) {
-          console.log(response);
-          window.location.reload();
-        },
-        error: function(error) {
-          console.log(error);
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('addStoreForm');
+      const sidInput = document.getElementById('sid');
+      const mgridInput = document.getElementById('mgrid');
+      
+      form.addEventListener('submit', function(e) {
+        if (!sidInput.checkValidity()) {
+          e.preventDefault(); // Prevent form submission
+          alert(sidInput.validationMessage);
+        }
+        if (!mgridInput.checkValidity()) {
+          e.preventDefault(); // Prevent form submission
+          alert(mgridInput.validationMessage);
         }
       });
     });
-  });
 </script>
-<form id="addStoreForm" action="/stores/add" method="POST">
+<form id="addStoreForm" action="/stores/add/:sid" method="POST">
   <%- include('partials/navbar') %>
     <!-- Include Bootstrap JS and jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

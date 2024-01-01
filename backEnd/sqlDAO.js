@@ -13,6 +13,7 @@ const host = process.env.SQLDB_HOST;
 const port = process.env.SQLDB_PORT;
 const connectionLimit = process.env.SQLDB_CONNECTION_LIMIT;
 
+//create a pool of connections to the database
 pmysql.createPool({
     connectionLimit: connectionLimit,
     host: host,
@@ -26,6 +27,7 @@ pmysql.createPool({
     console.log("Pool Error: " + err);
 });
 
+//get all stores from database
 function getStore() {
     return new Promise((resolve, reject) => {
         pool.query('SELECT * FROM store')
@@ -66,14 +68,13 @@ function editStore(sid, location, mgrid) {
 
 
 //add a new store to the database using the values from the addStore page
-// add a new store to the database using the values from the addStore page
 function addStore(sid, location, mgrid) {
     return new Promise(async(resolve, reject) => {
         try {
-            // Check if the mgrid is already assigned to a store
+            //Checks if the mgrid is already assigned to a store
             const mgridExists = await pool.query("SELECT * FROM store WHERE mgrid = ?", [mgrid]);
             if (mgridExists.length > 0) {
-                // If the manager ID is found, throw an error
+                //If the manager ID is found, throw an error
                 throw new Error('Manager ID is already assigned to another store');
             }
 
@@ -92,7 +93,7 @@ function addStore(sid, location, mgrid) {
     )
 }
 
-
+//delete a store from the database
 function deleteStore(sid) {
     return new Promise((resolve, reject) => {
         pool.query('DELETE FROM store WHERE sid = ?', [sid])
@@ -106,7 +107,7 @@ function deleteStore(sid) {
 }
 
 
-
+//get a store by its id
 function getStoreById(sid) {
     return new Promise((resolve, reject) => {
         pool.query('SELECT * FROM store WHERE sid = ?', [sid])
@@ -168,8 +169,6 @@ function checkProductInStores(pid) {
             });
     });
 }
-
-
 
 
 module.exports = {

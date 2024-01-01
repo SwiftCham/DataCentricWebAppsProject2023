@@ -7,16 +7,24 @@
       
       form.addEventListener('submit', function(e) {
         if (!mgridInput.checkValidity()) {
-          e.preventDefault(); // Prevent form submission
+          e.preventDefault(); //Prevent form submission
           alert(mgridInput.validationMessage);
         }
         if (!nameInput.checkValidity()) {
-          e.preventDefault(); // Prevent form submission
+          e.preventDefault(); //Prevent form submission
           alert(nameInput.validationMessage);
         }
         if (!salaryInput.checkValidity()) {
-          e.preventDefault(); // Prevent form submission
+          e.preventDefault(); //Prevent form submission
           alert(salaryInput.validationMessage);
+        }
+        if (salaryInput.value < 30000 || salaryInput.value > 70000) {
+          e.preventDefault(); //Prevent form submission
+          alert("Salary must be between 30000 and 70000");
+        }
+        if (nameInput.value.length < 6) {
+          e.preventDefault(); //Prevent form submission
+          alert("Name must be at least 6 characters long");
         }
       });
     });
@@ -36,10 +44,10 @@
     </div>
     <div>
         <label for="name">Manager Name:</label>
-        <input type="text" id="name" name="name" min="1" value="<%= manager.name %>" required>
+        <input type="text" id="name" name="name" min="6" value="<%= manager.name %>" required>
     </div>
     <div>
         <label for="salary">Manager Salary:</label>
-        <input type="text" id="salary" name="salary"  min="30000" max="70000" value="<%= manager.salary %>" required>
+        <input type="number" id="salary" name="salary"  min="30000" max="70000" value="<%= manager.salary %>" required>
     </div>
     <button type="submit">Update Manager</button>
