@@ -1,41 +1,42 @@
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('addStoreForm');
-      const sidInput = document.getElementById('sid');
-      const mgridInput = document.getElementById('mgrid');
-      
-      form.addEventListener('submit', function(e) {
-        if (!sidInput.checkValidity()) {
-          e.preventDefault(); // Prevent form submission
-          alert(sidInput.validationMessage);
-        }
-        if (!mgridInput.checkValidity()) {
-          e.preventDefault(); // Prevent form submission
-          alert(mgridInput.validationMessage);
-        }
-      });
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('addStoreForm');
+    const sidInput = document.getElementById('sid');
+    const mgridInput = document.getElementById('mgrid');
+
+    form.addEventListener('submit', function (e) {
+      if (!sidInput.checkValidity()) {
+        e.preventDefault(); // Prevent form submission
+        alert(sidInput.validationMessage);
+      }
+      if (!mgridInput.checkValidity()) {
+        e.preventDefault(); // Prevent form submission
+        alert(mgridInput.validationMessage);
+      }
     });
+  });
 </script>
 <form id="addStoreForm" action="/stores/add/:sid" method="POST">
   <%- include('partials/navbar') %>
     <!-- Include Bootstrap JS and jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.5.0/dist/js/bootstrap.min.js"></script>
-    <% if (typeof error !== 'undefined') { %>
-      <p><%= error %></p>
-    <% } %>
-    <div>
-      <label for="sid">Store ID:</label>
-      <input type="text" name="sid" required>
-    </div>
-    <div>
-      <label for="location">Store Location:</label>
-      <input type="text" name="location" min="1" required>
-    </div>
-    <div>
-      <label for="mgrid">Manager ID:</label>
-      <input type="text" name="mgrid" min="4" max="4" required>
-    </div>
-      <button type="submit" value="Add">Add Store</button>
-  </form>
-  
+    <% if (typeof error !=='undefined' ) { %>
+      <p>
+        <%= error %>
+      </p>
+      <% } %>
+        <div>
+          <label for="sid">Store ID:</label>
+          <input type="text" name="sid" required>
+        </div>
+        <div>
+          <label for="location">Store Location:</label>
+          <input type="text" name="location" min="1" required>
+        </div>
+        <div>
+          <label for="mgrid">Manager ID:</label>
+          <input type="text" name="mgrid" min="4" max="4" required>
+        </div>
+        <button type="submit" value="Add">Add Store</button>
+</form>

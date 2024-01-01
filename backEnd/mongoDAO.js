@@ -5,7 +5,7 @@ const uri = process.env.MONGODB_URI; // Connection string from MongoDB Atlas.
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //connects to database and returns database object
-const mongoDAO = (() => { 
+const mongoDAO = (() => {
   let db;
 
   const connect = async () => {

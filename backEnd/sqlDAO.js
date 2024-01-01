@@ -42,7 +42,7 @@ function getStore() {
 
 //update a store using the values from the editStore page
 function editStore(sid, location, mgrid) {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             // Check if the mgrid is already assigned to a store
             const mgridExists = await pool.query("SELECT * FROM store WHERE mgrid = ?", [mgrid]);
@@ -51,14 +51,14 @@ function editStore(sid, location, mgrid) {
                 throw new Error('Manager ID is already assigned to another store');
             }
 
-        
+
             pool.query('UPDATE store SET location = ?, mgrid = ? WHERE sid = ?', [location, mgrid, sid])
-            .then((data) => {
-                resolve(data);
-            })
-            .catch(err => {
-                reject(err);
-            })
+                .then((data) => {
+                    resolve(data);
+                })
+                .catch(err => {
+                    reject(err);
+                })
         } catch (err) {
             console.error("Error editing store in SQL DAO:", err);
             reject(err);
@@ -69,7 +69,7 @@ function editStore(sid, location, mgrid) {
 
 //add a new store to the database using the values from the addStore page
 function addStore(sid, location, mgrid) {
-    return new Promise(async(resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             //Checks if the mgrid is already assigned to a store
             const mgridExists = await pool.query("SELECT * FROM store WHERE mgrid = ?", [mgrid]);
@@ -79,12 +79,12 @@ function addStore(sid, location, mgrid) {
             }
 
             pool.query('INSERT INTO store (sid, location, mgrid) VALUES (?, ?, ?)', [sid, location, mgrid])
-            .then((data) => {
-                resolve(data);
-            })
-            .catch(err => {
-                reject(err);
-            })
+                .then((data) => {
+                    resolve(data);
+                })
+                .catch(err => {
+                    reject(err);
+                })
         } catch (err) {
             console.error("Error adding store in SQL DAO:", err);
             reject(err);

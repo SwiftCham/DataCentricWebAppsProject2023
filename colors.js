@@ -18,7 +18,7 @@ const colors = {
     cyan: "\x1b[36m",
     white: "\x1b[37m",
     orange: "\x1b[38;5;202m",
-    
+
 
     // background colors
     bgBlack: "\x1b[40m",
@@ -29,7 +29,7 @@ const colors = {
     bgMagenta: "\x1b[45m",
     bgCyan: "\x1b[46m",
     bgWhite: "\x1b[47m"
-    };
+};
 
 const colorize = (color, text) => {
     return colors[color] + text + colors.reset;

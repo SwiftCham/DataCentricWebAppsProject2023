@@ -66,7 +66,7 @@ app.get('/stores/edit/:id', (req, res) => {
 app.post('/stores/:id', async (req, res) => {
   const storeId = req.params.id;
   const { sid, location, mgrid } = req.body; // Add sid parameter here
-  
+
   // First, check if the manager ID exists in MongoDB
   const db = mongoDAO.getDb(); // Obtain the db instance
   const manager = await db.collection('managers').findOne({ _id: mgrid });
@@ -81,7 +81,7 @@ app.post('/stores/:id', async (req, res) => {
         mgrid: mgrid
       }
     });
-    
+
   } else {
     await sqlDAO.editStore(sid, location, mgrid) // Use sid parameter here
       .then(() => {
@@ -96,9 +96,9 @@ app.post('/stores/:id', async (req, res) => {
               location: location,
               mgrid: mgrid
             }
-      });
-    }
-  })
+          });
+        }
+      })
   }
 });
 
@@ -120,7 +120,7 @@ app.post('/stores/add/:sid', async (req, res) => {
       //If the manager ID doesn't exist in MongoDB
       throw new Error('Manager ID does not exist in MongoDB');
     }
-    
+
     //Check for null values in the request body
     if (!sid || !location || !mgrid) {
       throw new Error('Data cannot be null');
@@ -221,7 +221,7 @@ app.post('/managers/add', async (req, res) => {
     if (err.code === 11000) {
       // Duplicate key error
       const { mgrid, name, salary } = req.body;
-      res.render('addManager', { 
+      res.render('addManager', {
         error: `Error: Manager ${mgrid} already exists in MongoDB`,
         mgrid,
         name,
